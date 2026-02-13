@@ -1,6 +1,6 @@
-# TYPO3 + DDEV Projekt
+# TYPO3 + DDEV Project
 
-## Projekt-Übersicht
+## Project Overview
 - **Framework**: TYPO3 CMS 13 LTS
 - **Development Environment**: DDEV
 - **PHP Version**: 8.2
@@ -9,12 +9,12 @@
 - **Build Tool**: Vite
 - **Code Quality**: PHPStan, PHPCS
 
-## TYPO3 Dokumentation
+## TYPO3 Documentation
 - **Core API**: https://docs.typo3.org/m/typo3/reference-coreapi/13.4/en-us/
 - **Extension Development**: https://docs.typo3.org/m/typo3/reference-coreapi/13.4/en-us/ExtensionArchitecture/
 - **TypoScript**: https://docs.typo3.org/m/typo3/reference-typoscript/13.4/en-us/
 
-## Projekt-Initialisierung
+## Project Initialization
 
 ### 1. Composer Setup (TYPO3 13 LTS)
 ```json
@@ -57,31 +57,31 @@
 
 ### 2. Installation
 ```bash
-# TYPO3 installieren
+# Install TYPO3
 ddev composer create-project typo3/cms-base-distribution .
 
-# DDEV starten
+# Start DDEV
 ddev start
 
-# TYPO3 Setup
+# TYPO3 setup
 ddev typo3 setup
 
-# Vite & Dependencies
+# Vite & dependencies
 ddev exec npm install
 
-# Browser öffnen
+# Open in browser
 ddev launch
 ```
 
-## Wichtige Befehle
+## Important Commands
 
 ### DDEV
 ```bash
-ddev start          # Container starten
-ddev stop           # Container stoppen
-ddev restart        # Container neustarten
-ddev ssh            # In Container einloggen
-ddev logs           # Logs anzeigen
+ddev start          # Start containers
+ddev stop           # Stop containers
+ddev restart        # Restart containers
+ddev ssh            # Shell into container
+ddev logs           # Show logs
 ```
 
 ### TYPO3
@@ -105,7 +105,7 @@ ddev import-db --file=backup.sql.gz
 ddev mysql          # MySQL CLI
 ```
 
-## Projekt-Struktur
+## Project Structure
 
 ```
 project/
@@ -115,7 +115,7 @@ project/
 │   └── system/
 │       └── settings.php
 ├── packages/
-│   ├── theme/                          # Haupt-Theme Extension
+│   ├── theme/                          # Main theme extension
 │   │   ├── Classes/
 │   │   ├── Configuration/
 │   │   │   ├── TCA/
@@ -123,21 +123,21 @@ project/
 │   │   │   └── TypoScript/
 │   │   ├── Resources/
 │   │   │   ├── Private/
-│   │   │   │   ├── Js/               # Source JS (wird compiliert)
+│   │   │   │   ├── Js/               # Source JS (compiled)
 │   │   │   │   ├── Layouts/
 │   │   │   │   ├── Partials/
-│   │   │   │   ├── Scss/             # Bootstrap SCSS + Custom
+│   │   │   │   ├── Scss/             # Bootstrap SCSS + custom
 │   │   │   │   └── Templates/
 │   │   │   └── Public/
-│   │   │       ├── Css/              # Compiliertes CSS
-│   │   │       ├── Js/               # Compiliertes JS
+│   │   │       ├── Css/              # Compiled CSS
+│   │   │       ├── Js/               # Compiled JS
 │   │   │       └── Images/
 │   │   ├── ext_emconf.php
 │   │   ├── ext_localconf.php
 │   │   ├── ext_tables.php
 │   │   └── composer.json
 │   │
-│   └── [weitere-extensions]/         # Neue Extensions hier
+│   └── [further-extensions]/          # Add new extensions here
 │       ├── Classes/
 │       │   ├── Controller/
 │       │   ├── Domain/
@@ -170,7 +170,7 @@ project/
 └── claude.md
 ```
 
-## Vite Konfiguration
+## Vite Configuration
 
 ### vite.config.js
 ```javascript
@@ -178,7 +178,7 @@ import { defineConfig } from 'vite';
 import { resolve } from 'path';
 import { readdirSync, statSync } from 'fs';
 
-// Auto-discover alle packages
+// Auto-discover all packages
 function discoverPackages() {
   const packagesDir = resolve(__dirname, 'packages');
   const entries = {};
@@ -270,10 +270,10 @@ export default defineConfig({
 
 ### Vite Development
 ```bash
-# Development Server (mit HMR)
+# Development server (with HMR)
 ddev exec npm run dev
 
-# Production Build
+# Production build
 ddev exec npm run build
 ```
 
@@ -305,13 +305,13 @@ ddev exec npm run build
 
 ### Resources/Private/Scss/main.scss
 ```scss
-// Bootstrap 5 Import
+// Bootstrap 5 import
 @import "bootstrap/scss/bootstrap";
 
-// Custom Variables
+// Custom variables
 $primary-color: #0080ff;
 
-// Custom Styles
+// Custom styles
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
@@ -325,7 +325,7 @@ import 'bootstrap';
 // Custom JS
 console.log('Theme loaded');
 
-// Module Imports
+// Module imports
 // import { myFunction } from './modules/example.js';
 ```
 
@@ -358,20 +358,20 @@ defined('TYPO3') or die();
 );
 ```
 
-## Neue Extension erstellen
+## Create New Extension
 
-### 1. Struktur anlegen (TYPO3 Standard)
+### 1. Set Up Structure (TYPO3 Standard)
 ```bash
-mkdir -p packages/meine_extension/{Classes/{Controller,Domain/{Model,Repository},ViewHelpers},Configuration/{TCA,TypoScript},Resources/{Private/{Layouts,Partials,Templates,Js,Scss},Public/{Css,Js}}}
-cd packages/meine_extension
+mkdir -p packages/my_extension/{Classes/{Controller,Domain/{Model,Repository},ViewHelpers},Configuration/{TCA,TypoScript},Resources/{Private/{Layouts,Partials,Templates,Js,Scss},Public/{Css,Js}}}
+cd packages/my_extension
 ```
 
 ### 2. composer.json (TYPO3 Standard)
 ```json
 {
-  "name": "vendor/meine-extension",
+  "name": "vendor/my-extension",
   "type": "typo3-cms-extension",
-  "description": "Extension Beschreibung",
+  "description": "Extension description",
   "require": {
     "typo3/cms-core": "^13.4",
     "typo3/cms-extbase": "^13.4",
@@ -379,12 +379,12 @@ cd packages/meine_extension
   },
   "autoload": {
     "psr-4": {
-      "Vendor\\MeineExtension\\": "Classes/"
+      "Vendor\\MyExtension\\": "Classes/"
     }
   },
   "extra": {
     "typo3/cms": {
-      "extension-key": "meine_extension"
+      "extension-key": "my_extension"
     }
   }
 }
@@ -394,8 +394,8 @@ cd packages/meine_extension
 ```php
 <?php
 $EM_CONF[$_EXTKEY] = [
-    'title' => 'Meine Extension',
-    'description' => 'Beschreibung',
+    'title' => 'My Extension',
+    'description' => 'Description',
     'category' => 'plugin',
     'author' => 'Author Name',
     'author_email' => 'email@example.com',
@@ -409,46 +409,46 @@ $EM_CONF[$_EXTKEY] = [
 ];
 ```
 
-### 4. ext_localconf.php (Plugin registrieren)
+### 4. ext_localconf.php (Register Plugin)
 ```php
 <?php
 defined('TYPO3') or die();
 
 \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
-    'MeineExtension',
+    'MyExtension',
     'Pi1',
     [
-        \Vendor\MeineExtension\Controller\MainController::class => 'list, show',
+        \Vendor\MyExtension\Controller\MainController::class => 'list, show',
     ],
     [
-        \Vendor\MeineExtension\Controller\MainController::class => '',
+        \Vendor\MyExtension\Controller\MainController::class => '',
     ]
 );
 ```
 
 ### 5. Installation
 ```bash
-# Repository hinzufügen (falls noch nicht in composer.json)
-ddev composer config repositories.meine-extension path packages/meine_extension
+# Add repository (if not already in composer.json)
+ddev composer config repositories.my-extension path packages/my_extension
 
-# Extension installieren
-ddev composer require vendor/meine-extension:@dev
+# Install extension
+ddev composer require vendor/my-extension:@dev
 
-# Extension aktivieren
-ddev typo3 extension:activate meine_extension
+# Activate extension
+ddev typo3 extension:activate my_extension
 
-# Cache leeren
+# Flush cache
 ddev typo3 cache:flush
 ```
 
-### 6. Vite Integration (automatisch)
-- `Resources/Private/Js/main.js` erstellen → wird automatisch gefunden
-- `Resources/Private/Scss/main.scss` erstellen → wird automatisch compiliert
+### 6. Vite Integration (Automatic)
+- Create `Resources/Private/Js/main.js` → auto-discovered
+- Create `Resources/Private/Scss/main.scss` → compiled automatically
 - Build: `ddev exec npm run build`
 
 ## Code Quality & Testing
 
-### PHPStan Konfiguration (phpstan.neon)
+### PHPStan Configuration (phpstan.neon)
 ```neon
 includes:
     - vendor/saschaegerer/phpstan-typo3/extension.neon
@@ -461,28 +461,28 @@ parameters:
         - packages/*/Resources/
         - packages/*/Tests/
     ignoreErrors:
-        # TYPO3 spezifische Ignores
+        # TYPO3-specific ignores
         - '#Cannot access property .* on TYPO3\\CMS\\.*#'
 ```
 
-### PHPStan Ausführen
+### Run PHPStan
 ```bash
-# Komplettes Projekt analysieren
+# Analyse full project
 ddev exec vendor/bin/phpstan analyse
 
-# Nur eine Extension
+# Single extension only
 ddev exec vendor/bin/phpstan analyse packages/theme/
 
-# Mit Level
+# With level
 ddev exec vendor/bin/phpstan analyse -l 8 packages/
 ```
 
 ### ECS (Easy Coding Standard)
 ```bash
-# Code Style Check
+# Code style check
 ddev exec vendor/bin/ecs check packages/
 
-# Auto-Fix
+# Auto-fix
 ddev exec vendor/bin/ecs check packages/ --fix
 ```
 
@@ -513,19 +513,19 @@ fi
 
 ## TYPO3 Standards & Best Practices
 
-### Extension Development (nach TYPO3 Docs)
+### Extension Development (per TYPO3 Docs)
 - **Namespace**: `Vendor\ExtensionName\`
 - **Extension Key**: lowercase_with_underscores
 - **Composer Name**: vendor/extension-name
-- **Classes**: PSR-4 Autoloading in `Classes/`
+- **Classes**: PSR-4 autoloading in `Classes/`
 - **Configuration**: TCA in `Configuration/TCA/`, TypoScript in `Configuration/TypoScript/`
-- **Templates**: Fluid Templates in `Resources/Private/`
+- **Templates**: Fluid templates in `Resources/Private/`
 - **Assets**: Compiled in `Resources/Public/`
 
 ### Controller (Extbase)
 ```php
 <?php
-namespace Vendor\MeineExtension\Controller;
+namespace Vendor\MyExtension\Controller;
 
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 
@@ -542,7 +542,7 @@ class MainController extends ActionController
 ### Model
 ```php
 <?php
-namespace Vendor\MeineExtension\Domain\Model;
+namespace Vendor\MyExtension\Domain\Model;
 
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
@@ -565,17 +565,17 @@ class Item extends AbstractEntity
 ### Repository
 ```php
 <?php
-namespace Vendor\MeineExtension\Domain\Repository;
+namespace Vendor\MyExtension\Domain\Repository;
 
 use TYPO3\CMS\Extbase\Persistence\Repository;
 
 class ItemRepository extends Repository
 {
-    // Custom queries hier
+    // Custom queries here
 }
 ```
 
-## Konfiguration
+## Configuration
 
 ### DDEV (.ddev/config.yaml)
 ```yaml
@@ -590,28 +590,28 @@ database:
 
 ### TYPO3 Backend
 - URL: https://project-name.ddev.site/typo3
-- Admin User: (siehe .env oder setup)
+- Admin user: (see .env or setup)
 
 ## Development Workflow
 
-### 1. Neue Feature entwickeln
+### 1. Develop New Feature
 ```bash
-# Branch erstellen
-git checkout -b feature/neue-funktion
+# Create branch
+git checkout -b feature/my-feature
 
-# Vite Dev Server starten (HMR)
+# Start Vite dev server (HMR)
 ddev exec npm run dev
 
-# Code ändern in packages/[extension]/
+# Edit code in packages/[extension]/
 # - PHP: Classes/
 # - JS: Resources/Private/Js/
 # - SCSS: Resources/Private/Scss/
 # - Templates: Resources/Private/Templates/
 
-# Cache leeren
+# Flush cache
 ddev typo3 cache:flush
 
-# Testen
+# Test
 ddev launch
 ```
 
@@ -620,36 +620,36 @@ ddev launch
 # PHPStan
 ddev composer test:phpstan
 
-# Code Style
+# Code style
 ddev composer test:ecs
 
-# Alles testen
+# Run all tests
 ddev composer test
 ```
 
 ### 3. Production Build
 ```bash
-# Assets compilieren
+# Compile assets
 ddev exec npm run build
 
 # Commit
 git add .
-git commit -m "feat: neue Funktion"
+git commit -m "feat: new feature"
 git push
 ```
 
 ### 4. Deployment
 ```bash
-# Composer Production Install
+# Composer production install
 composer install --no-dev --optimize-autoloader
 
-# Assets Build
+# Assets build
 npm run build
 
-# Database Update
+# Database update
 vendor/bin/typo3 database:updateschema
 
-# Cache leeren
+# Flush cache
 vendor/bin/typo3 cache:flush
 ```
 
@@ -671,20 +671,20 @@ ddev exec chmod -R 775 var/ public/typo3temp/
 ddev typo3 database:updateschema
 ```
 
-## Commit-Message-Regeln (TYPO3)
+## Commit Message Rules (TYPO3)
 
-Angelehnt an die [TYPO3 Commit Message rules](https://docs.typo3.org/m/typo3/guide-contributionworkflow/main/en-us/Appendix/CommitMessage.html).
+Based on the [TYPO3 Commit Message rules](https://docs.typo3.org/m/typo3/guide-contributionworkflow/main/en-us/Appendix/CommitMessage.html).
 
-### Summary-Zeile (erste Zeile)
+### Summary Line (First Line)
 
-* Mit **Keyword** beginnen: `[BUGFIX]`, `[FEATURE]`, `[TASK]`, `[DOCS]`
-* Bei Breaking Changes: `[!!!]` vor das Keyword setzen, z. B. `[!!!][FEATURE]`
-* Zeile unter 52 Zeichen (max. 72)
-* **Imperativ** formulieren („Add feature“, nicht „Added feature“)  
-  Prüfregel: „If applied, this commit will **&lt;Subject&gt;**“ muss sinnvoll lesbar sein
-* Nach dem Keyword mit Großbuchstabe starten
+* Start with a **keyword**: `[BUGFIX]`, `[FEATURE]`, `[TASK]`, `[DOCS]`
+* For breaking changes: put `[!!!]` before the keyword, e.g. `[!!!][FEATURE]`
+* Keep the line under 52 characters (max 72)
+* Use **imperative mood** (“Add feature”, not “Added feature”).  
+  Check: “If applied, this commit will **&lt;Subject&gt;**” must read naturally
+* Capitalize after the keyword
 
-Beispiele:
+Examples:
 ```
 [TASK] Add initial TYPO3 Agent Kit boilerplate
 [FEATURE] Add option to hide BE search box in list module
@@ -692,24 +692,24 @@ Beispiele:
 [DOCS] Add documentation for version 9.1
 ```
 
-### Body (Beschreibung)
+### Body (Description)
 
-* Was wird geändert/hinzugefügt – kurz und sachlich
-* Aufzählungen mit `*` und hängendem Einzug
-* Zeilen nach 72 Zeichen umbrechen
+* What is changed or added – brief and to the point
+* Use `*` for bullet points and a hanging indent
+* Wrap lines at 72 characters
 
-### Relationships (optional, bei TYPO3-Forge-Patches Pflicht)
+### Relationships (Optional; Required for TYPO3 Forge Patches)
 
-* `Resolves: #12345` – schließt ein Forge-Ticket
-* `Related: #12340` – verknüpft weiteres Ticket
-* `Releases: main, 13.4` – Ziel-Branches
+* `Resolves: #12345` – closes a Forge ticket
+* `Related: #12340` – links another ticket
+* `Releases: main, 13.4` – target branches
 
-In eigenen Repos ohne Forge können Resolves/Releases entfallen.
+In your own repos without Forge, Resolves/Releases can be omitted.
 
-## Nützliche Links
+## Useful Links
 - DDEV Docs: https://ddev.readthedocs.io
 - TYPO3 Docs: https://docs.typo3.org
 - Project Repository: https://github.com/ohm-meter/typo3-agent-kit
 
-## Notizen
-- (Projektspezifische Infos hier)
+## Notes
+- (Project-specific notes here)
