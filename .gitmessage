@@ -1,0 +1,13 @@
+[TASK] Add initial TYPO3 Agent Kit boilerplate
+
+* Add Composer and package.json with TYPO3 13 LTS, Vite, PHPStan
+* Add minimal theme extension (packages/theme) with Bootstrap 5,
+  Fluid default template and TypoScript
+* Add DDEV config, config directory skeleton and .gitignore so only
+  boilerplate is versioned (no vendor, public, env, macOS cruft)
+* Add README in English with quick start; keep AGENTS.md for reference
+* Add TYPO3-style commit message rules to AGENTS.md
+* Add claude.md as symlink to AGENTS.md
+
+Runnable after: composer install, ddev start, typo3 setup,
+extension:activate theme, npm install, npm run build.
