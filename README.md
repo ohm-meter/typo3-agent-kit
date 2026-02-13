@@ -26,11 +26,11 @@ ddev composer install
 # 3. Start DDEV (creates containers, DB, .ddev runtime data)
 ddev start
 
-# 4. Set up TYPO3 (DB + config/system/settings.php)
-ddev typo3 setup
+# 4. Set up TYPO3 (DB + config/system/settings.php, non-interactive, Apache as default)
+ddev typo3 setup --server-type=apache --driver=mysqli --host=db --port=3306 --dbname=db --username=db --password=db --admin-username=admin --admin-user-password=admin --admin-email=admin@example.com --create-site=https://my-project.ddev.site/ --project-name="TYPO3 Agent Kit" --no-interaction
+# (Replace my-project.ddev.site with your ddev project hostname. Full options: AGENTS.md)
 
-# 5. Activate theme
-ddev typo3 extension:activate theme
+# 5. Theme is active by default (Composer); list: ddev typo3 extension:list
 
 # 6. Build frontend assets (Vite)
 ddev exec npm install

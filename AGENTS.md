@@ -57,14 +57,27 @@
 
 ### 2. Installation
 ```bash
-# Install TYPO3
+# Install TYPO3 (or use existing composer.json and: ddev composer install)
 ddev composer create-project typo3/cms-base-distribution .
 
 # Start DDEV
 ddev start
 
-# TYPO3 setup
-ddev typo3 setup
+# TYPO3 setup (non-interactive, no user input required)
+# Standard: Apache. DB and admin credentials match DDEV defaults.
+ddev typo3 setup \
+  --server-type=apache \
+  --driver=mysqli \
+  --host=db --port=3306 --dbname=db --username=db --password=db \
+  --admin-username=admin \
+  --admin-user-password=admin \
+  --admin-email=admin@example.com \
+  --create-site=https://<project-name>.ddev.site/ \
+  --project-name="TYPO3 Project" \
+  --no-interaction
+
+# Optional: interactive setup (waits for user input; first prompt: web server = Apache/IIS/Other)
+# ddev typo3 setup
 
 # Vite & dependencies
 ddev exec npm install
@@ -72,6 +85,8 @@ ddev exec npm install
 # Open in browser
 ddev launch
 ```
+
+**Note:** The plain command `ddev typo3 setup` runs interactively and waits for input (first question: web server type). For scripts and automation, use the non-interactive form above. Default web server is set to **Apache**.
 
 ## Important Commands
 
@@ -654,6 +669,81 @@ vendor/bin/typo3 cache:flush
 ```
 
 ## Troubleshooting
+
+### 404 – No site configuration found
+If the browser shows **404** with *"No site configuration found"*, TYPO3 has no site config for the current host. Create `config/sites/<identifier>/config.yaml` (e.g. `config/sites/main/config.yaml`) with at least:
+
+- **rootPageId**: UID of the root page (usually `1` if setup was run)
+- **base**: Full base URL of the site, e.g. `https://typo3-agent-kit.ddev.site/`
+- **languages**: One language with `languageId: 0`, `base: /`, `enabled: true`
+
+Example minimal `config/sites/main/config.yaml`:
+
+```yaml
+rootPageId: 1
+base: 'https://typo3-agent-kit.ddev.site/'
+baseVariants: []
+languages:
+  - title: Deutsch
+    enabled: true
+    base: /
+    locale: de_DE.UTF-8
+    languageId: 0
+    websiteTitle: ''
+    navigationTitle: Deutsch
+    hreflang: de-DE
+    direction: ltr
+    typo3Language: de
+    flag: de
+errorHandling: []
+routes: []
+```
+
+Use your actual DDEV hostname in `base`. After adding or changing the file, flush cache.
+
+### 404 – Root page missing (empty `pages` table)
+If the site config exists but the frontend still shows **404** or the root page is missing, the `pages` table may be empty. Use TYPO3’s built-in setup instead of manual SQL.
+
+**Preferred: TYPO3 setup with `--create-site` (creates root page + site config)**  
+Run setup **once** when the database is still empty (or after resetting the DB). TYPO3 will create the root page (“Home”), a basic TypoScript record, and `config/sites/main/config.yaml`:
+
+```bash
+# Optional: reset DB if it already has data but no pages
+# ddev delete --omit-snapshot && ddev start
+
+ddev typo3 setup \
+  --server-type=apache --driver=mysqli --host=db --port=3306 --dbname=db --username=db --password=db \
+  --admin-username=admin --admin-user-password=admin --admin-email=admin@example.com \
+  --create-site=https://typo3-agent-kit.ddev.site/ \
+  --project-name="TYPO3 Agent Kit" \
+  --no-interaction
+```
+
+Replace the URL with your DDEV hostname. If the DB already contains tables, setup may refuse to run; then use one of the options below.
+
+**Alternative 1 – Backend (Site Management):**  
+Backend → **Site Management** → **Sites** → **Create new site**. Follow the wizard (root page + site configuration are created).
+
+**Alternative 2 – Backend (Page tree):**  
+Backend → **Web** → **Page** → right‑click root level → **New** → enter title → in the new page under **Behaviour** enable **Use as Root Page** → Save. Then add a matching site in **Site Management** → **Sites** with this page as root.
+
+**Check if root page exists:**
+```bash
+ddev mysql -e "SELECT uid, pid, title, doktype, is_siteroot FROM pages WHERE uid = 1;"
+```
+If a row is returned, the root page exists and the site config’s `rootPageId` (e.g. 1) must match. Then flush cache: `ddev exec vendor/bin/typo3 cache:flush`.
+
+### 503 – Trusted Hosts (DDEV)
+If the browser shows **503** and the message *"The current host header value does not match the configured trusted hosts pattern"* (e.g. host `typo3-agent-kit.ddev.site`), add the trusted hosts pattern for DDEV in `config/system/settings.php` inside the `SYS` array:
+
+```php
+'SYS' => [
+    'trustedHostsPattern' => '.*\.ddev\.site(\.local)?.*',
+    // ... rest of SYS config
+],
+```
+
+This allows any `*.ddev.site` (and `*.ddev.site.local`) host. After changing, flush cache: `ddev exec vendor/bin/typo3 cache:flush` or use Backend → Admin Tools → Flush cache.
 
 ### Cache Issues
 ```bash
