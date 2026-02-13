@@ -375,91 +375,7 @@ defined('TYPO3') or die();
 
 ## Create New Extension
 
-### 1. Set Up Structure (TYPO3 Standard)
-```bash
-mkdir -p packages/my_extension/{Classes/{Controller,Domain/{Model,Repository},ViewHelpers},Configuration/{TCA,TypoScript},Resources/{Private/{Layouts,Partials,Templates,Js,Scss},Public/{Css,Js}}}
-cd packages/my_extension
-```
-
-### 2. composer.json (TYPO3 Standard)
-```json
-{
-  "name": "vendor/my-extension",
-  "type": "typo3-cms-extension",
-  "description": "Extension description",
-  "require": {
-    "typo3/cms-core": "^13.4",
-    "typo3/cms-extbase": "^13.4",
-    "typo3/cms-fluid": "^13.4"
-  },
-  "autoload": {
-    "psr-4": {
-      "Vendor\\MyExtension\\": "Classes/"
-    }
-  },
-  "extra": {
-    "typo3/cms": {
-      "extension-key": "my_extension"
-    }
-  }
-}
-```
-
-### 3. ext_emconf.php
-```php
-<?php
-$EM_CONF[$_EXTKEY] = [
-    'title' => 'My Extension',
-    'description' => 'Description',
-    'category' => 'plugin',
-    'author' => 'Author Name',
-    'author_email' => 'email@example.com',
-    'state' => 'stable',
-    'version' => '1.0.0',
-    'constraints' => [
-        'depends' => [
-            'typo3' => '13.4.0-13.4.99',
-        ],
-    ],
-];
-```
-
-### 4. ext_localconf.php (Register Plugin)
-```php
-<?php
-defined('TYPO3') or die();
-
-\TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
-    'MyExtension',
-    'Pi1',
-    [
-        \Vendor\MyExtension\Controller\MainController::class => 'list, show',
-    ],
-    [
-        \Vendor\MyExtension\Controller\MainController::class => '',
-    ]
-);
-```
-
-### 5. Installation
-```bash
-# Add repository (if not already in composer.json)
-ddev composer config repositories.my-extension path packages/my_extension
-
-# Install extension
-ddev composer require vendor/my-extension:@dev
-
-# Activate extension
-ddev typo3 extension:activate my_extension
-
-# Flush cache
-ddev typo3 cache:flush
-```
-
-### 6. Vite Integration (Automatic)
-- Create `Resources/Private/Js/main.js` → auto-discovered
-- Create `Resources/Private/Scss/main.scss` → compiled automatically
-- Build: `ddev exec npm run build`
+Use the project skill **typo3-create-extension** when creating or scaffolding a new TYPO3 extension: `.cursor/skills/typo3-create-extension/SKILL.md`. It covers folder structure, composer.json, ext_emconf.php, plugin registration in ext_localconf.php, installation (path repo), and optional Vite integration.
 
 ## Code Quality & Testing
 
@@ -526,69 +442,9 @@ if [ $? -ne 0 ]; then
 fi
 ```
 
-## TYPO3 Standards & Best Practices
+## TYPO3 extension code (Extbase)
 
-### Extension Development (per TYPO3 Docs)
-- **Namespace**: `Vendor\ExtensionName\`
-- **Extension Key**: lowercase_with_underscores
-- **Composer Name**: vendor/extension-name
-- **Classes**: PSR-4 autoloading in `Classes/`
-- **Configuration**: TCA in `Configuration/TCA/`, TypoScript in `Configuration/TypoScript/`
-- **Templates**: Fluid templates in `Resources/Private/`
-- **Assets**: Compiled in `Resources/Public/`
-
-### Controller (Extbase)
-```php
-<?php
-namespace Vendor\MyExtension\Controller;
-
-use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
-
-class MainController extends ActionController
-{
-    public function listAction(): void
-    {
-        $items = $this->itemRepository->findAll();
-        $this->view->assign('items', $items);
-    }
-}
-```
-
-### Model
-```php
-<?php
-namespace Vendor\MyExtension\Domain\Model;
-
-use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
-
-class Item extends AbstractEntity
-{
-    protected string $title = '';
-    
-    public function getTitle(): string
-    {
-        return $this->title;
-    }
-    
-    public function setTitle(string $title): void
-    {
-        $this->title = $title;
-    }
-}
-```
-
-### Repository
-```php
-<?php
-namespace Vendor\MyExtension\Domain\Repository;
-
-use TYPO3\CMS\Extbase\Persistence\Repository;
-
-class ItemRepository extends Repository
-{
-    // Custom queries here
-}
-```
+For writing or generating Controllers, Models, Repositories and following TYPO3 extension conventions (namespaces, keys, paths), use the project skill **typo3-extbase-code**: `.cursor/skills/typo3-extbase-code/SKILL.md`.
 
 ## Configuration
 
@@ -761,40 +617,19 @@ ddev exec chmod -R 775 var/ public/typo3temp/
 ddev typo3 database:updateschema
 ```
 
-## Commit Message Rules (TYPO3)
+## Commit messages (TYPO3)
 
-Based on the [TYPO3 Commit Message rules](https://docs.typo3.org/m/typo3/guide-contributionworkflow/main/en-us/Appendix/CommitMessage.html).
+Commit messages for this project follow the [TYPO3 Commit Message rules](https://docs.typo3.org/m/typo3/guide-contributionworkflow/main/en-us/Appendix/CommitMessage.html). Use the project skill **typo3-commit-messages** when writing or reviewing commits: `.cursor/skills/typo3-commit-messages/SKILL.md`.
 
-### Summary Line (First Line)
+## Project skills (when to use)
 
-* Start with a **keyword**: `[BUGFIX]`, `[FEATURE]`, `[TASK]`, `[DOCS]`
-* For breaking changes: put `[!!!]` before the keyword, e.g. `[!!!][FEATURE]`
-* Keep the line under 52 characters (max 72)
-* Use **imperative mood** (“Add feature”, not “Added feature”).  
-  Check: “If applied, this commit will **&lt;Subject&gt;**” must read naturally
-* Capitalize after the keyword
+| Skill | Use when |
+|-------|----------|
+| **typo3-commit-messages** | Writing or reviewing commit messages |
+| **typo3-create-extension** | Creating or scaffolding a new TYPO3 extension |
+| **typo3-extbase-code** | Writing/generating Controllers, Models, Repositories; TYPO3 extension PHP standards |
 
-Examples:
-```
-[TASK] Add initial TYPO3 Agent Kit boilerplate
-[FEATURE] Add option to hide BE search box in list module
-[BUGFIX] Fix backend edit URL in admin panel
-[DOCS] Add documentation for version 9.1
-```
-
-### Body (Description)
-
-* What is changed or added – brief and to the point
-* Use `*` for bullet points and a hanging indent
-* Wrap lines at 72 characters
-
-### Relationships (Optional; Required for TYPO3 Forge Patches)
-
-* `Resolves: #12345` – closes a Forge ticket
-* `Related: #12340` – links another ticket
-* `Releases: main, 13.4` – target branches
-
-In your own repos without Forge, Resolves/Releases can be omitted.
+Path: `.cursor/skills/<skill-name>/SKILL.md`.
 
 ## Useful Links
 - DDEV Docs: https://ddev.readthedocs.io
